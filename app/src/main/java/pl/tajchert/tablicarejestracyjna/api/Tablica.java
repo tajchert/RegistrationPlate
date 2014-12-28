@@ -11,6 +11,7 @@ public class Tablica {
     private List<Komentarze> komentarze = new ArrayList<Komentarze>();
     private Integer lapkiGora;
     private Integer lapkiDol;
+    private String id = "";
 
     public List<Komentarze> getKomentarze() {
         return komentarze;
@@ -34,6 +35,14 @@ public class Tablica {
 
     public void setLapkiDol(Integer lapkiDol) {
         this.lapkiDol = lapkiDol;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Override
