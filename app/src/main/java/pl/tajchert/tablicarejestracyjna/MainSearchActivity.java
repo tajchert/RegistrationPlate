@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -32,6 +33,8 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_search);
 
+
+
         queue = Volley.newRequestQueue(this);
 
         fab = (AddFloatingActionButton) findViewById(R.id.normal_plus);
@@ -39,6 +42,23 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
             @Override
             public void onClick(View v) {
 
+            }
+        });
+
+        LinearLayout voteUp = (LinearLayout) findViewById(R.id.voteUp);
+        LinearLayout voteDown = (LinearLayout) findViewById(R.id.voteDown);
+
+        voteUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick UPVOTE!");
+            }
+        });
+
+        voteDown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick DOWNVOTE!");
             }
         });
     }
