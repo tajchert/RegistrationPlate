@@ -41,6 +41,7 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
     private CardView cardViewHint;
     private CardView cardViewPlate;
 
+    private String lastSearchSuggestion = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +117,7 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
             searchView.setQuery(s.toUpperCase(), false);
         } else {
             searchView.setSuggestionsAdapter(SearchStorage.getCursor(MainSearchActivity.this, s));
+            lastSearchSuggestion = s;
         }
         return false;
     }
@@ -258,6 +260,20 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
             }
         });
         searchView.setSuggestionsAdapter(SearchStorage.getCursor(MainSearchActivity.this, ""));
+        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int i) {
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int i) {
+                String selectedSearch = SearchStorage.getMatchedSearches(MainSearchActivity.this, lastSearchSuggestion).get(i);
+                searchView.setQuery(selectedSearch, false);
+                search(selectedSearch);
+                return true;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
 }

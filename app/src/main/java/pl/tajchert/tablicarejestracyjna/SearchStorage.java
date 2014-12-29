@@ -48,13 +48,7 @@ public class SearchStorage {
     public static CursorAdapter getCursor (Context context, String match){
         String[] columnNames = {"_id","text"};
         MatrixCursor cursor = new MatrixCursor(columnNames);
-        ArrayList<String> onlyMatching = new ArrayList<>();
-        for(String searchHistorical : getInstance(context).history){
-            if(searchHistorical.contains(match) && onlyMatching.size() < 10){
-                onlyMatching.add(searchHistorical);
-            }
-        }
-        Collections.rotate(onlyMatching, onlyMatching.size());
+        ArrayList<String> onlyMatching = getMatchedSearches(context, match);
         String[] temp = new String[2];
         String[] array = new String[onlyMatching.size()];
         array = onlyMatching.toArray(array);
@@ -68,6 +62,17 @@ public class SearchStorage {
         int[] to = {android.R.id.text1};
         CursorAdapter cursorAdapter =  new SimpleCursorAdapter(context, R.layout.search_suggestion_list, cursor, from, to);
         return cursorAdapter;
+    }
+
+    public static ArrayList<String> getMatchedSearches(Context context, String match) {
+        ArrayList<String> onlyMatching = new ArrayList<>();
+        for(String searchHistorical : getInstance(context).history){
+            if(searchHistorical.contains(match) && onlyMatching.size() < 10){
+                onlyMatching.add(searchHistorical);
+            }
+        }
+        Collections.rotate(onlyMatching, onlyMatching.size());
+        return onlyMatching;
     }
 
 }
