@@ -58,7 +58,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Rejestracja: "
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <TextView
                     android:id="@+id/textCardPlate"
@@ -66,7 +66,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/textCardPlateTitle"
                     android:text="WY XXXX"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textStyle="bold" />
 
                 <View

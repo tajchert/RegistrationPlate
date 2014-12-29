@@ -36,12 +36,14 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
     private Tablica currentTablica;
     private LinearLayout buttonsVotingLayout;
     private RecyclerView commentsRecList;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_search);
         queue = Volley.newRequestQueue(this);
+
 
         commentsRecList = (RecyclerView) findViewById(R.id.commentList);
         commentsRecList.setHasFixedSize(false);
@@ -87,14 +89,17 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
     @Override
     public boolean onQueryTextSubmit(String s) {
         if(s != null && s.length() > 0) {
-            s = "PO6A822";
-            search(s);
+            //s = "PO6A822";
+            search(s.toUpperCase());
         }
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String s) {
+        if(!s.equals(s.toUpperCase())){
+            searchView.setQuery(s.toUpperCase(), false);
+        }
         if(s.length() >= 5){
             //We can assume it is correct plate number
         }
@@ -110,9 +115,12 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
                 Gson gson = new Gson();
                 Tablica tablica = gson.fromJson(response.toString(), Tablica.class);
                 tablica.setId(plateNumber);
-                currentTablica = tablica;
-                setPlateView(tablica);
-                Log.d(TAG, "onResponse tablica: " + tablica);
+                if(tablica.getLapkiDol()== 0 && tablica.getLapkiGora()==0 && (tablica.getKomentarze()== null || tablica.getKomentarze().size()==0)){
+                    setNoPlateView();
+                } else {
+                    currentTablica = tablica;
+                    setPlateView(tablica);
+                }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -186,6 +194,13 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
         commentsRecList.setAdapter(adapter);
     }
 
+    /**
+     * When there is no match
+     */
+    private void setNoPlateView(){
+        //TODO no result card, hide previous stuff
+    }
+
     private void showCommentDialog(String plateID){
         DialogFragment newFragment = FragmentDialogComment.newInstance(plateID);
         newFragment.show(getSupportFragmentManager(), "dialogTag");
@@ -195,7 +210,7 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main_search, menu);
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setOnQueryTextListener(this);
         return super.onCreateOptionsMenu(menu);
     }
