@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
@@ -33,15 +35,19 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
     private boolean votedForThatPlate = false;
     private Tablica currentTablica;
     private LinearLayout buttonsVotingLayout;
+    private RecyclerView commentsRecList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_search);
-
-
-
         queue = Volley.newRequestQueue(this);
+
+        commentsRecList = (RecyclerView) findViewById(R.id.commentList);
+        commentsRecList.setHasFixedSize(false);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        commentsRecList.setLayoutManager(llm);
 
         fab = (AddFloatingActionButton) findViewById(R.id.normal_plus);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -176,7 +182,8 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
         }
         votedForThatPlate = false;
 
-        //TODO comments
+        RecyclerView.Adapter adapter = new AdapterComment(tablica.getKomentarze());
+        commentsRecList.setAdapter(adapter);
     }
 
     private void showCommentDialog(String plateID){
