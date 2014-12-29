@@ -33,7 +33,7 @@ public class AdapterComment extends RecyclerView.Adapter<HolderComment> {
         contactViewHolder.cAuthor.setText(ci.getPodpis());
         contactViewHolder.cContent.setText(Html.fromHtml(ci.getTresc()));
         try {
-            String smallDate = ci.getData().substring(0, ci.getData().length()-2);
+            String smallDate = ci.getData().substring(0, ci.getData().length()-9);
             contactViewHolder.cDate.setText(smallDate);
         } catch (Exception e) {
             Log.d(TAG, "onBindViewHolder error:" + e.getMessage());

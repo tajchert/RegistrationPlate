@@ -35,8 +35,11 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
     private boolean votedForThatPlate = false;
     private Tablica currentTablica;
     private LinearLayout buttonsVotingLayout;
+
     private RecyclerView commentsRecList;
     private SearchView searchView;
+    private CardView cardViewHint;
+    private CardView cardViewPlate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,8 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
         LinearLayout voteUp = (LinearLayout) findViewById(R.id.voteUp);
         LinearLayout voteDown = (LinearLayout) findViewById(R.id.voteDown);
         buttonsVotingLayout = (LinearLayout) findViewById(R.id.buttonsVoting);
+        cardViewPlate = (CardView) findViewById(R.id.cardViewPlate);
+        cardViewHint = (CardView) findViewById(R.id.cardViewHint);
 
         voteUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,10 +176,8 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
     }
 
     private void setPlateView(Tablica tablica) {
-        CardView cardViewPlate = (CardView) findViewById(R.id.cardViewPlate);
         cardViewPlate.setVisibility(View.VISIBLE);
-
-        CardView cardViewHint = (CardView) findViewById(R.id.cardViewHint);
+        commentsRecList.setVisibility(View.VISIBLE);
         cardViewHint.setVisibility(View.GONE);
 
         TextView textViewPlateId = (TextView) findViewById(R.id.textCardPlate);
@@ -198,9 +201,26 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
      * When there is no match
      */
     private void setNoPlateView(){
-        //TODO no result card, hide previous stuff
+        cardViewPlate.setVisibility(View.INVISIBLE);
+        commentsRecList.setVisibility(View.INVISIBLE);
+        cardViewHint.setVisibility(View.VISIBLE);
+        ((TextView) findViewById(R.id.textHint)).setText(getResources().getText(R.string.card_info_no_result));
     }
 
+    /**
+     * Easter egg, nothing fancy
+     */
+    private void setCustomCard(){
+        cardViewPlate.setVisibility(View.INVISIBLE);
+        commentsRecList.setVisibility(View.INVISIBLE);
+        cardViewHint.setVisibility(View.VISIBLE);
+        ((TextView) findViewById(R.id.textHint)).setText(getResources().getText(R.string.card_info_author));
+    }
+
+    /**
+     * Show input for new comment, fill String if user should have suggested some plate id
+     * @param plateID
+     */
     private void showCommentDialog(String plateID){
         DialogFragment newFragment = FragmentDialogComment.newInstance(plateID);
         newFragment.show(getSupportFragmentManager(), "dialogTag");
