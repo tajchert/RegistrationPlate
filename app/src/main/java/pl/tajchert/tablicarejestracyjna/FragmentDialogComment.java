@@ -7,7 +7,6 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -57,13 +56,14 @@ public class FragmentDialogComment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         View v = inflater.inflate(R.layout.fragment_dialog_comment, container, false);
 
         editTextPlateId = (EditText) v.findViewById(R.id.EditTextPlateId);
         editTextNick = (EditText) v.findViewById(R.id.EditTextNick);
         editTextComment = (EditText) v.findViewById(R.id.EditTextComment);
         sendButton = (ImageView) v.findViewById(R.id.buttonSend);
+
+
 
 
         sendButton.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +76,14 @@ public class FragmentDialogComment extends DialogFragment {
                     plate = plateId;
                 } else {
                     plate = editTextPlateId.getText().toString();
+                }
+                if(plate == null || plate.length()==0){
+                    //cancell if plate is null
+                    return;
+                }
+                if(editTextNick.getText().toString().length() == 0 || editTextComment.getText().toString().length() == 0){
+                    //Do not add empty comments
+                    return;
                 }
                 UploadComment uploader = new UploadComment(editTextNick.getText().toString(),editTextComment.getText().toString(), plate,null);
                 uploader.execute();
@@ -90,7 +98,8 @@ public class FragmentDialogComment extends DialogFragment {
             editTextNick.requestFocus();
         }
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-
+        getDialog().setTitle(getResources().getString(R.string.title_activity_new_comment));
+        getDialog().setCanceledOnTouchOutside(false);
         return v;
     }
 

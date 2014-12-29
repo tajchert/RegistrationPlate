@@ -2,6 +2,7 @@ package pl.tajchert.tablicarejestracyjna;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +26,9 @@ import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
+import pl.tajchert.tablicarejestracyjna.api.Komentarze;
 import pl.tajchert.tablicarejestracyjna.api.Tablica;
 
 
@@ -37,9 +41,11 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
     private LinearLayout buttonsVotingLayout;
 
     private RecyclerView commentsRecList;
+    private RecyclerView.Adapter adapter;
     private SearchView searchView;
     private CardView cardViewHint;
     private CardView cardViewPlate;
+    private SwipeRefreshLayout swipeLayout;
 
     private String lastSearchSuggestion = "";
 
@@ -49,14 +55,29 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
         setContentView(R.layout.activity_main_search);
         queue = Volley.newRequestQueue(this);
 
-
+        swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
         commentsRecList = (RecyclerView) findViewById(R.id.commentList);
+        fab = (AddFloatingActionButton) findViewById(R.id.normal_plus);
+        LinearLayout voteUp = (LinearLayout) findViewById(R.id.voteUp);
+        LinearLayout voteDown = (LinearLayout) findViewById(R.id.voteDown);
+        buttonsVotingLayout = (LinearLayout) findViewById(R.id.buttonsVoting);
+        cardViewPlate = (CardView) findViewById(R.id.cardViewPlate);
+        cardViewHint = (CardView) findViewById(R.id.cardViewHint);
+
         commentsRecList.setHasFixedSize(false);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         commentsRecList.setLayoutManager(llm);
+        adapter = new AdapterComment(new ArrayList<Komentarze>());
+        commentsRecList.setAdapter(adapter);
 
-        fab = (AddFloatingActionButton) findViewById(R.id.normal_plus);
+        swipeLayout.setColorSchemeColors(getResources().getColor(R.color.theme_color_accent), getResources().getColor(R.color.theme_color), getResources().getColor(R.color.theme_color_dark));
+        swipeLayout.setDistanceToTriggerSync(Integer.MAX_VALUE);//Do not allow user to pull to refresh
+
+        setButtons(voteUp, voteDown);
+    }
+
+    private void setButtons(LinearLayout voteUp, LinearLayout voteDown) {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,12 +88,6 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
                 }
             }
         });
-
-        LinearLayout voteUp = (LinearLayout) findViewById(R.id.voteUp);
-        LinearLayout voteDown = (LinearLayout) findViewById(R.id.voteDown);
-        buttonsVotingLayout = (LinearLayout) findViewById(R.id.buttonsVoting);
-        cardViewPlate = (CardView) findViewById(R.id.cardViewPlate);
-        cardViewHint = (CardView) findViewById(R.id.cardViewHint);
 
         voteUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,7 +127,6 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
 
     @Override
     public boolean onQueryTextChange(String s) {
-
         if(!s.equals(s.toUpperCase())){
             searchView.setQuery(s.toUpperCase(), false);
         } else {
@@ -123,6 +137,7 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
     }
 
     private void search(final String plateNumber) {
+        swipeLayout.setRefreshing(true);
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, APIConstants.TABLICE_INFO_PLATE + plateNumber, null, new Response.Listener<JSONObject>() {
 
             @Override
@@ -137,11 +152,17 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
                     currentTablica = tablica;
                     setPlateView(tablica);
                 }
+                if(swipeLayout.isRefreshing()){
+                    swipeLayout.setRefreshing(false);
+                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "onErrorResponse :" + error.getMessage());
+                if(swipeLayout.isRefreshing()){
+                    swipeLayout.setRefreshing(false);
+                }
             }
         });
         queue.add(jsObjRequest);
@@ -149,6 +170,7 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
 
     private void vote(String plateNumber, final int value) {
         // 1 - upvote, (-1) - downvote
+        swipeLayout.setRefreshing(true);
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, APIConstants.TABLICE_INFO_PLATE + plateNumber + APIConstants.TABLICE_INFO_VOTE_ADD  + value, null, new Response.Listener<JSONObject>() {
 
             @Override
@@ -175,12 +197,18 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
                     buttonsVotingLayout.setAlpha(0.4f);
                 }
                 votedForThatPlate = true;
+                if(swipeLayout.isRefreshing()){
+                    swipeLayout.setRefreshing(false);
+                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 //NOT OK
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.vote_error), Toast.LENGTH_SHORT).show();
+                if(swipeLayout.isRefreshing()){
+                    swipeLayout.setRefreshing(false);
+                }
             }
         });
         queue.add(jsObjRequest);
@@ -204,8 +232,8 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
         }
         votedForThatPlate = false;
 
-        RecyclerView.Adapter adapter = new AdapterComment(tablica.getKomentarze());
-        commentsRecList.setAdapter(adapter);
+        ((AdapterComment) adapter).setCommentList(tablica.getKomentarze());
+        adapter.notifyDataSetChanged();
     }
 
     /**

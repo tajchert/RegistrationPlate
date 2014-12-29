@@ -16,20 +16,24 @@ import pl.tajchert.tablicarejestracyjna.api.Komentarze;
  */
 public class AdapterComment extends RecyclerView.Adapter<HolderComment> {
     private static final String TAG = "AdapterComment";
-    private List<Komentarze> contactList;
+    private List<Komentarze> commentList;
 
-    public AdapterComment(List<Komentarze> contactList) {
-        this.contactList = contactList;
+    public AdapterComment(List<Komentarze> commentList) {
+        this.commentList = commentList;
+    }
+
+    public void setCommentList(List<Komentarze> commentList) {
+        this.commentList = commentList;
     }
 
     @Override
     public int getItemCount() {
-        return contactList.size();
+        return commentList.size();
     }
 
     @Override
     public void onBindViewHolder(HolderComment contactViewHolder, int i) {
-        Komentarze ci = contactList.get(i);
+        Komentarze ci = commentList.get(i);
         contactViewHolder.cAuthor.setText(ci.getPodpis());
         contactViewHolder.cContent.setText(Html.fromHtml(ci.getTresc()));
         try {

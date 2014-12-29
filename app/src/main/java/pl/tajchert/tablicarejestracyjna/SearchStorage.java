@@ -43,11 +43,17 @@ public class SearchStorage {
     public void addToHistory(String search) {
         history.add(search);
         sharedPreferences.edit().putStringSet(PREFS_KEY_HISTORY, new HashSet<String>(history)).apply();
+        if(getHistory().size()>200){
+            //TODO Trim the oldest one
+        }
     }
 
     public static CursorAdapter getCursor (Context context, String match){
         String[] columnNames = {"_id","text"};
         MatrixCursor cursor = new MatrixCursor(columnNames);
+        String[] from = {"text"};
+        int[] to = {android.R.id.text1};
+
         ArrayList<String> onlyMatching = getMatchedSearches(context, match);
         String[] temp = new String[2];
         String[] array = new String[onlyMatching.size()];
@@ -58,10 +64,7 @@ public class SearchStorage {
             temp[1] = item;
             cursor.addRow(temp);
         }
-        String[] from = {"text"};
-        int[] to = {android.R.id.text1};
-        CursorAdapter cursorAdapter =  new SimpleCursorAdapter(context, R.layout.search_suggestion_list, cursor, from, to);
-        return cursorAdapter;
+        return (CursorAdapter) new SimpleCursorAdapter(context, R.layout.search_suggestion_list, cursor, from, to);
     }
 
     public static ArrayList<String> getMatchedSearches(Context context, String match) {
