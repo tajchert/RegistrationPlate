@@ -41,6 +41,7 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
     private CardView cardViewHint;
     private CardView cardViewPlate;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,7 +103,8 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
             } else {
                 search(searchPlate);
             }
-
+            SearchStorage.getInstance(MainSearchActivity.this).addToHistory(searchPlate);
+            Log.d(TAG, "onQueryTextSubmit history: " + SearchStorage.getInstance(MainSearchActivity.this).getHistory());
         }
         return false;
     }
