@@ -167,8 +167,8 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="16dp"
-        fab:fab_colorNormal="@color/white"
-        fab:fab_colorPressed="@color/white_pressed"
+        fab:fab_colorNormal="@color/theme_color_accent"
+        fab:fab_colorPressed="@color/theme_color_accent_pressed"
         fab:fab_plusIconColor="@color/half_black" />
 
 </RelativeLayout>

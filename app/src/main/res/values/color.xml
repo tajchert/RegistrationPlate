@@ -5,9 +5,7 @@
     <color name="theme_color_dark">#1976d2</color>
     <color name="theme_color_accent">#64b5f6</color>
 
-
-
-    <color name="half_black">#808080</color>
-    <color name="white">#fafafa</color>
-    <color name="white_pressed">#f1f1f1</color>
+    <!-- FAB -->
+    <color name="theme_color_accent_pressed">#ff3fa4f6</color>
+    <color name="half_black">#fff</color>
 </resources>
