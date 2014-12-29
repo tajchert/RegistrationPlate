@@ -20,6 +20,9 @@ import pl.tajchert.tablicarejestracyjna.api.APIConnect;
 public class FragmentDialogComment extends DialogFragment {
     private String plateId;
 
+    final int REQUEST_IMAGE_CAPTURE = 1;
+    final int REQUEST_IMAGE_GALLERY= 2;
+
     private EditText editTextPlateId;
     private EditText editTextNick;
     private EditText editTextComment;
@@ -131,6 +134,4 @@ public class FragmentDialogComment extends DialogFragment {
         @Override
         protected void onPreExecute() {}
     }
-
-
 }

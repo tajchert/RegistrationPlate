@@ -21,6 +21,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.AddFloatingActionButton;
 import com.google.gson.Gson;
 
@@ -52,6 +53,7 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Crashlytics.start(this);
         setContentView(R.layout.activity_main_search);
         queue = Volley.newRequestQueue(this);
 
@@ -109,10 +111,9 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
     }
 
     @Override
-    public boolean onQueryTextSubmit(String s) {
-        if(s != null && s.length() > 0) {
-            String searchPlate = s;
-            searchPlate = s.toUpperCase();
+    public boolean onQueryTextSubmit(String searchPlate) {
+        if(searchPlate != null && searchPlate.length() > 0) {
+            searchPlate = searchPlate.toUpperCase();
             searchPlate = searchPlate.replace(" " , "");
             if(searchPlate.equals("WX37125")){
                 setCustomCard();
@@ -269,7 +270,7 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
      * Show input for new comment, fill String if user should have suggested some plate id
      * @param plateID
      */
-    private void showCommentDialog(String plateID){
+    private void showCommentDialog(String plateID) {
         DialogFragment newFragment = FragmentDialogComment.newInstance(plateID);
         newFragment.show(getSupportFragmentManager(), "dialogTag");
     }
