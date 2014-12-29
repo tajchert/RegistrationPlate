@@ -94,8 +94,15 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
     @Override
     public boolean onQueryTextSubmit(String s) {
         if(s != null && s.length() > 0) {
-            //s = "PO6A822";
-            search(s.toUpperCase());
+            String searchPlate = s;
+            searchPlate = s.toUpperCase();
+            searchPlate = searchPlate.replace(" " , "");
+            if(searchPlate.equals("WX37125")){
+                setCustomCard();
+            } else {
+                search(searchPlate);
+            }
+
         }
         return false;
     }
@@ -206,6 +213,15 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
         cardViewHint.setVisibility(View.VISIBLE);
         ((TextView) findViewById(R.id.textHint)).setText(getResources().getText(R.string.card_info_no_result));
     }
+    /**
+     * Default (startin/clean) card
+     */
+    private void setCleanCard(){
+        cardViewPlate.setVisibility(View.INVISIBLE);
+        commentsRecList.setVisibility(View.INVISIBLE);
+        cardViewHint.setVisibility(View.VISIBLE);
+        ((TextView) findViewById(R.id.textHint)).setText(getResources().getText(R.string.card_hint_start));
+    }
 
     /**
      * Easter egg, nothing fancy
@@ -232,6 +248,13 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
         getMenuInflater().inflate(R.menu.menu_main_search, menu);
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setOnQueryTextListener(this);
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                setCleanCard();
+                return false;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
 }

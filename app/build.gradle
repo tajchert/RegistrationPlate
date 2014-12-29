@@ -17,6 +17,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
 }
 
 repositories {
@@ -24,6 +28,8 @@ repositories {
         url "https://oss.sonatype.org/content/repositories/snapshots/"
     }
 }
+
+//old httpmime as StringBody is depraced in lates one, FIXME
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -34,4 +40,5 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:21.0.0'
     compile 'com.balysv:material-ripple:0.9.5-SNAPSHOT@aar'
     compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'org.apache.httpcomponents:httpmime:4.2'
 }

@@ -1,6 +1,7 @@
 package pl.tajchert.tablicarejestracyjna;
 
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -10,6 +11,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+
+import pl.tajchert.tablicarejestracyjna.api.APIConnect;
 
 
 /**
@@ -67,6 +70,15 @@ public class FragmentDialogComment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 //SEND
+
+                String plate;
+                if(plateId == null || plateId.length() == 0) {
+                    plate = plateId;
+                } else {
+                    plate = editTextPlateId.getText().toString();
+                }
+                UploadComment uploader = new UploadComment(editTextNick.getText().toString(),editTextComment.getText().toString(), plate,null);
+                uploader.execute();
             }
         });
 
@@ -80,6 +92,35 @@ public class FragmentDialogComment extends DialogFragment {
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
         return v;
+    }
+
+    private class UploadComment extends AsyncTask<String, Void, String> {
+        private String author;
+        private String content;
+        private String plateId;
+        private String image;
+
+        private UploadComment(String author, String content, String plateId, String image) {
+            this.author = author;
+            this.content = content;
+            this.plateId = plateId;
+            this.image = image;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            plateId = plateId.replace(" ", "");
+            APIConnect.addComment(author,plateId,content,image);
+            return "Executed";
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            getDialog().dismiss();
+        }
+
+        @Override
+        protected void onPreExecute() {}
     }
 
 
