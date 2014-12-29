@@ -111,11 +111,11 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
 
     @Override
     public boolean onQueryTextChange(String s) {
+
         if(!s.equals(s.toUpperCase())){
             searchView.setQuery(s.toUpperCase(), false);
-        }
-        if(s.length() >= 5){
-            //We can assume it is correct plate number
+        } else {
+            searchView.setSuggestionsAdapter(SearchStorage.getCursor(MainSearchActivity.this, s));
         }
         return false;
     }
@@ -257,6 +257,7 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
                 return false;
             }
         });
+        searchView.setSuggestionsAdapter(SearchStorage.getCursor(MainSearchActivity.this, ""));
         return super.onCreateOptionsMenu(menu);
     }
 }
