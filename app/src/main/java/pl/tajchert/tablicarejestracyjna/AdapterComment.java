@@ -2,6 +2,7 @@ package pl.tajchert.tablicarejestracyjna;
 
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +37,7 @@ public class AdapterComment extends RecyclerView.Adapter<HolderComment> {
         Komentarze ci = commentList.get(i);
         contactViewHolder.cAuthor.setText(ci.getPodpis());
         contactViewHolder.cContent.setText(Html.fromHtml(ci.getTresc()));
+        contactViewHolder.cContent.setMovementMethod(LinkMovementMethod.getInstance());
         try {
             String smallDate = ci.getData().substring(0, ci.getData().length()-9);
             contactViewHolder.cDate.setText(smallDate);

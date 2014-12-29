@@ -15,8 +15,8 @@
             android:id="@+id/commentVotes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_marginLeft="10dp"
+            android:orientation="vertical"
             android:visibility="gone">
 
             <ImageView
@@ -37,36 +37,39 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_toRightOf="@+id/commentVotes"
-            android:layout_marginLeft="10dp"
             android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="15dp"
             android:layout_marginTop="10dp"
-            android:layout_marginRight="15dp">
+            android:layout_toRightOf="@+id/commentVotes"
+            android:orientation="vertical">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/commentDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
                 android:text="DATE"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:singleLine="true"/>
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/commentContent"
-                android:layout_marginTop="5dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="CONTENT"/>
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/commentAuthor"
                 android:layout_marginTop="5dp"
+                android:autoLink="web"
+                android:text="CONTENT"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/commentAuthor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:textStyle="italic"
+                android:layout_marginTop="5dp"
+                android:text="AUTHOR"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="AUTHOR"/>
+                android:textStyle="italic" />
         </LinearLayout>
     </RelativeLayout>
 </android.support.v7.widget.CardView>

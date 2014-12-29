@@ -73,6 +73,7 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
         adapter = new AdapterComment(new ArrayList<Komentarze>());
         commentsRecList.setAdapter(adapter);
 
+        swipeLayout.setEnabled(false);
         swipeLayout.setColorSchemeColors(getResources().getColor(R.color.theme_color_accent), getResources().getColor(R.color.theme_color), getResources().getColor(R.color.theme_color_dark));
         swipeLayout.setDistanceToTriggerSync(Integer.MAX_VALUE);//Do not allow user to pull to refresh
 
@@ -120,7 +121,6 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
             } else {
                 search(searchPlate);
             }
-            SearchStorage.getInstance(MainSearchActivity.this).addToHistory(searchPlate);
             Log.d(TAG, "onQueryTextSubmit history: " + SearchStorage.getInstance(MainSearchActivity.this).getHistory());
         }
         return false;
@@ -219,6 +219,7 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
         cardViewPlate.setVisibility(View.VISIBLE);
         commentsRecList.setVisibility(View.VISIBLE);
         cardViewHint.setVisibility(View.GONE);
+        SearchStorage.getInstance(MainSearchActivity.this).addToHistory(tablica.getId());
 
         TextView textViewPlateId = (TextView) findViewById(R.id.textCardPlate);
         textViewPlateId.setText(tablica.getId()+"");
