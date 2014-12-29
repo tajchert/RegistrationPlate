@@ -1,6 +1,7 @@
 package pl.tajchert.tablicarejestracyjna;
 
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
@@ -46,7 +47,11 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(currentTablica != null && currentTablica.getId() != null &&currentTablica.getId().length() > 0) {
+                    showCommentDialog(currentTablica.getId());
+                } else {
+                    showCommentDialog(null);
+                }
             }
         });
 
@@ -57,7 +62,6 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
         voteUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick UPVOTE!");
                 if(currentTablica != null && currentTablica.getId() != null && votedForThatPlate == false){
                     vote(currentTablica.getId(), 1);
                 }
@@ -67,7 +71,6 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
         voteDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick DOWNVOTE!");
                 if(currentTablica != null && currentTablica.getId() != null && votedForThatPlate == false){
                     vote(currentTablica.getId(), (-1));
                 }
@@ -122,7 +125,7 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
             public void onResponse(JSONObject response) {
                 Log.d(TAG, "onResponse response: " +response.toString());
                 String status = response.optString("status");
-                if(status != null && status.equals("ok")){
+                if(status != null && status.equals("ok") && votedForThatPlate == false){
                     //OK!
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.vote_success), Toast.LENGTH_SHORT).show();
                     if(value == 1) {
@@ -174,6 +177,11 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
         votedForThatPlate = false;
 
         //TODO comments
+    }
+
+    private void showCommentDialog(String plateID){
+        DialogFragment newFragment = FragmentDialogComment.newInstance(plateID);
+        newFragment.show(getSupportFragmentManager(), "dialogTag");
     }
 
     @Override

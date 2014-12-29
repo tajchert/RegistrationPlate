@@ -1,0 +1,44 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_horizontal_margin">
+
+    <EditText
+        android:id="@+id/EditTextPlateId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tablica rejestracyjna"
+        android:singleLine="true" />
+
+    <EditText
+        android:id="@+id/EditTextNick"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Login"
+        android:singleLine="true" />
+
+    <EditText
+        android:id="@+id/EditTextComment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Komentarz" />
+
+    <com.balysv.materialripple.MaterialRippleLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:rippleColor="@color/theme_color_accent"
+        app:rippleOverlay="false">
+
+        <ImageView
+            android:id="@+id/buttonSend"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:scaleType="fitEnd"
+            android:src="@drawable/ic_action_send_now" />
+    </com.balysv.materialripple.MaterialRippleLayout>
+
+</LinearLayout>
