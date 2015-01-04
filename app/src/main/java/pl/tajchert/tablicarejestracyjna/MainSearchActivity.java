@@ -1,5 +1,9 @@
 package pl.tajchert.tablicarejestracyjna;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -27,6 +31,10 @@ import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import pl.tajchert.tablicarejestracyjna.api.Komentarze;
@@ -47,6 +55,8 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
     private CardView cardViewHint;
     private CardView cardViewPlate;
     private SwipeRefreshLayout swipeLayout;
+
+    private DialogFragment newFragment;
 
     private String lastSearchSuggestion = "";
 
@@ -272,7 +282,7 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
      * @param plateID
      */
     private void showCommentDialog(String plateID) {
-        DialogFragment newFragment = FragmentDialogComment.newInstance(plateID);
+        newFragment = FragmentDialogComment.newInstance(plateID);
         newFragment.show(getSupportFragmentManager(), "dialogTag");
     }
 
@@ -305,5 +315,50 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
             }
         });
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult :" + requestCode + ", " + resultCode);
+        if(requestCode == ToolConstants.ACTION_GALLERY_PICTURE && resultCode == RESULT_OK) {
+            ((FragmentDialogComment) newFragment).setImage(null);
+            try {
+                final Uri imageUri = data.getData();
+                final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+
+                if(newFragment!=null && newFragment.isVisible()){
+                    ((FragmentDialogComment) newFragment).setImage(selectedImage);
+                    Bitmap bitmap;
+                    InputStream is;
+                    if (imageUri.toString().startsWith("content://com.google.android.apps.photos.content")){
+                        is = getContentResolver().openInputStream(Uri.parse(imageUri.toString()));
+                        bitmap = BitmapFactory.decodeStream(is);
+                        try {
+                            File f = ToolConstants.createImageFile();
+                            ToolConstants.saveBitmap(bitmap,f);
+                            Log.d(TAG, "onActivityResult f:" + f.getAbsolutePath());
+                            ((FragmentDialogComment) newFragment).lastPicLocation = f.getAbsolutePath();
+                        } catch (IOException e) {
+                            Log.d(TAG, "onActivityResult error: " + e.getMessage());
+                        }
+                    }
+                }
+            } catch (FileNotFoundException e) {
+                Log.d(TAG, "onActivityResult error: " + e.getMessage());
+            }
+        } else if(requestCode == ToolConstants.ACTION_TAKE_PICTURE && resultCode == RESULT_OK) {
+            ((FragmentDialogComment) newFragment).setImage(null);
+            if(newFragment!=null && newFragment.isVisible()){
+                File imgFile = new  File(((FragmentDialogComment) newFragment).lastPicLocation);
+                if(imgFile.exists()){
+                    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                    if(myBitmap != null) {
+                        ((FragmentDialogComment) newFragment).setImage(myBitmap);
+                    }
+                }
+            }
+        }
     }
 }

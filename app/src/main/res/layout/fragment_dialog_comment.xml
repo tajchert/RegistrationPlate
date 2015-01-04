@@ -28,6 +28,27 @@
         android:layout_height="wrap_content"
         android:hint="Komentarz" />
 
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:id="@+id/imageSelected"/>
+
+    <com.balysv.materialripple.MaterialRippleLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:rippleColor="@color/theme_color_accent"
+        app:rippleOverlay="false">
+
+        <Button
+            android:id="@+id/buttonImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitEnd"
+            android:text="Dodaj zdjęcie"/>
+    </com.balysv.materialripple.MaterialRippleLayout>
+
     <com.balysv.materialripple.MaterialRippleLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
