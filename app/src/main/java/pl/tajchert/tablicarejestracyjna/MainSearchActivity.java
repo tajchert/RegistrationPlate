@@ -159,6 +159,7 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
                 tablica.setId(plateNumber);
                 if(tablica.getLapkiDol()== 0 && tablica.getLapkiGora()==0 && (tablica.getKomentarze()== null || tablica.getKomentarze().size()==0)){
                     setNoPlateView();
+                    Toast.makeText(getApplicationContext(), "Tej tablicy nie ma jeszcze w systemie, dodaj kometarz.", Toast.LENGTH_LONG).show();
                 } else {
                     currentTablica = tablica;
                     setPlateView(tablica);
@@ -170,6 +171,7 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), "Bład z wyszukiwaniem.", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "onErrorResponse :" + error.getMessage());
                 if(swipeLayout.isRefreshing()){
                     swipeLayout.setRefreshing(false);
@@ -283,6 +285,7 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
      */
     private void showCommentDialog(String plateID) {
         newFragment = FragmentDialogComment.newInstance(plateID);
+        newFragment.setRetainInstance(true);
         newFragment.show(getSupportFragmentManager(), "dialogTag");
     }
 
@@ -320,9 +323,10 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult :" + requestCode + ", " + resultCode);
         if(requestCode == ToolConstants.ACTION_GALLERY_PICTURE && resultCode == RESULT_OK) {
-            ((FragmentDialogComment) newFragment).setImage(null);
+            if(newFragment != null){
+                ((FragmentDialogComment) newFragment).setImage(null);
+            }
             try {
                 final Uri imageUri = data.getData();
                 final InputStream imageStream = getContentResolver().openInputStream(imageUri);
@@ -332,24 +336,24 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
                     ((FragmentDialogComment) newFragment).setImage(selectedImage);
                     Bitmap bitmap;
                     InputStream is;
-                    if (imageUri.toString().startsWith("content://com.google.android.apps.photos.content")){
-                        is = getContentResolver().openInputStream(Uri.parse(imageUri.toString()));
-                        bitmap = BitmapFactory.decodeStream(is);
-                        try {
-                            File f = ToolConstants.createImageFile();
-                            ToolConstants.saveBitmap(bitmap,f);
-                            Log.d(TAG, "onActivityResult f:" + f.getAbsolutePath());
-                            ((FragmentDialogComment) newFragment).lastPicLocation = f.getAbsolutePath();
-                        } catch (IOException e) {
-                            Log.d(TAG, "onActivityResult error: " + e.getMessage());
-                        }
+                    is = getContentResolver().openInputStream(Uri.parse(imageUri.toString()));
+                    bitmap = BitmapFactory.decodeStream(is);
+                    try {
+                        File f = ToolConstants.createImageFile();
+                        ToolConstants.saveBitmap(bitmap,f);
+                        Log.d(TAG, "onActivityResult f:" + f.getAbsolutePath());
+                        ((FragmentDialogComment) newFragment).lastPicLocation = f.getAbsolutePath();
+                    } catch (IOException e) {
+                        Log.d(TAG, "onActivityResult error: " + e.getMessage());
                     }
                 }
             } catch (FileNotFoundException e) {
-                Log.d(TAG, "onActivityResult error: " + e.getMessage());
+                Toast.makeText(getApplicationContext(), "Bład z wyborem zdjecia.", Toast.LENGTH_SHORT).show();
             }
         } else if(requestCode == ToolConstants.ACTION_TAKE_PICTURE && resultCode == RESULT_OK) {
-            ((FragmentDialogComment) newFragment).setImage(null);
+            if(newFragment != null){
+                ((FragmentDialogComment) newFragment).setImage(null);
+            }
             if(newFragment!=null && newFragment.isVisible()){
                 File imgFile = new  File(((FragmentDialogComment) newFragment).lastPicLocation);
                 if(imgFile.exists()){
@@ -357,6 +361,8 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
                     if(myBitmap != null) {
                         ((FragmentDialogComment) newFragment).setImage(myBitmap);
                     }
+                } else{
+                    Toast.makeText(getApplicationContext(), "Bład z wyborem zdjecia.", Toast.LENGTH_SHORT).show();
                 }
             }
         }

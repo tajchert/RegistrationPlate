@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
@@ -100,10 +101,12 @@ public class FragmentDialogComment extends DialogFragment {
                 }
                 if (plate == null || plate.length() == 0) {
                     //cancell if plate is null
+                    Toast.makeText(getActivity().getApplicationContext(), "Dodaj tablice rejestracyjną.", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (editTextNick.getText().toString().length() == 0 || editTextComment.getText().toString().length() == 0) {
                     //Do not add empty comments
+                    Toast.makeText(getActivity().getApplicationContext(), "Dodaj komentarz.", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 UploadComment uploader = new UploadComment(editTextNick.getText().toString(), editTextComment.getText().toString(), plate, lastPicLocation);
@@ -123,6 +126,7 @@ public class FragmentDialogComment extends DialogFragment {
         getDialog().setCanceledOnTouchOutside(false);
         return v;
     }
+
 
     public void setImage(Bitmap selectedBitmap) {
         if (selectedBitmap != null) {

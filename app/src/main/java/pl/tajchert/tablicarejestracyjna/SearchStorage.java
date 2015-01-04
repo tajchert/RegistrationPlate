@@ -69,9 +69,17 @@ public class SearchStorage {
 
     public static ArrayList<String> getMatchedSearches(Context context, String match) {
         ArrayList<String> onlyMatching = new ArrayList<>();
-        for(String searchHistorical : getInstance(context).history){
-            if(searchHistorical.contains(match) && onlyMatching.size() < 10 && !onlyMatching.contains(searchHistorical)){
-                onlyMatching.add(searchHistorical);
+        if(match==null || match.equals("")){
+            for(String searchHistorical : getInstance(context).history){
+                if(onlyMatching.size() < 10 && !onlyMatching.contains(searchHistorical)){
+                    onlyMatching.add(searchHistorical);
+                }
+            }
+        } else {
+            for(String searchHistorical : getInstance(context).history){
+                if(searchHistorical.contains(match) && onlyMatching.size() < 10 && !onlyMatching.contains(searchHistorical)){
+                    onlyMatching.add(searchHistorical);
+                }
             }
         }
         Collections.rotate(onlyMatching, onlyMatching.size());

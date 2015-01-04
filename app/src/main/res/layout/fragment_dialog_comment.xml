@@ -3,64 +3,74 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:minWidth="250dp"
+    android:layout_gravity="center_horizontal|top"
     android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_horizontal_margin">
+    android:paddingRight="@dimen/activity_horizontal_margin">
 
-    <EditText
-        android:id="@+id/EditTextPlateId"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Tablica rejestracyjna"
-        android:singleLine="true" />
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/EditTextNick"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Podpis"
-        android:singleLine="true" />
-
-    <EditText
-        android:id="@+id/EditTextComment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Komentarz" />
-
-    <ImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        android:id="@+id/imageSelected"/>
-
-    <com.balysv.materialripple.MaterialRippleLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:rippleColor="@color/theme_color_accent"
-        app:rippleOverlay="false">
-
-        <Button
-            android:id="@+id/buttonImage"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scaleType="fitEnd"
-            android:text="Dodaj zdjęcie"/>
-    </com.balysv.materialripple.MaterialRippleLayout>
+            android:orientation="vertical">
 
-    <com.balysv.materialripple.MaterialRippleLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:rippleColor="@color/theme_color_accent"
-        app:rippleOverlay="false">
+            <EditText
+                android:id="@+id/EditTextPlateId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Tablica rejestracyjna"
+                android:singleLine="true" />
 
-        <ImageView
-            android:id="@+id/buttonSend"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:scaleType="fitEnd"
-            android:src="@drawable/ic_action_send_now" />
-    </com.balysv.materialripple.MaterialRippleLayout>
+            <EditText
+                android:id="@+id/EditTextNick"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Podpis"
+                android:singleLine="true" />
+
+            <EditText
+                android:id="@+id/EditTextComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Komentarz" />
+
+            <ImageView
+                android:id="@+id/imageSelected"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+
+            <com.balysv.materialripple.MaterialRippleLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:rippleColor="@color/theme_color_accent"
+                app:rippleOverlay="false">
+
+                <Button
+                    android:id="@+id/buttonImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitEnd"
+                    android:text="Dodaj zdjęcie" />
+            </com.balysv.materialripple.MaterialRippleLayout>
+
+            <com.balysv.materialripple.MaterialRippleLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:rippleColor="@color/theme_color_accent"
+                app:rippleOverlay="false">
+
+                <ImageView
+                    android:id="@+id/buttonSend"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:scaleType="fitEnd"
+                    android:src="@drawable/ic_action_send_now" />
+            </com.balysv.materialripple.MaterialRippleLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
