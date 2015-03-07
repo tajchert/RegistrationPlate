@@ -12,14 +12,14 @@ apply plugin: 'crashlytics'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.1.1"
+    buildToolsVersion "21.1.2"
 
     defaultConfig {
         applicationId "pl.tajchert.tablicarejestracyjna"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 3
-        versionName "1.1"
+        versionCode 4
+        versionName "1.2"
     }
     buildTypes {
         release {
@@ -54,4 +54,5 @@ dependencies {
     compile 'org.apache.httpcomponents:httpmime:4.2'
     compile 'com.android.support:support-v4:21.0.3'
     compile 'com.crashlytics.android:crashlytics:1.+'
+    compile 'de.greenrobot:eventbus:2.4.0'
 }

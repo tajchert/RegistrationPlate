@@ -37,6 +37,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import de.greenrobot.event.EventBus;
+import pl.tajchert.tablicarejestracyjna.api.EventPostCommentResult;
 import pl.tajchert.tablicarejestracyjna.api.Komentarze;
 import pl.tajchert.tablicarejestracyjna.api.Tablica;
 
@@ -88,6 +90,31 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
         swipeLayout.setDistanceToTriggerSync(Integer.MAX_VALUE);//Do not allow user to pull to refresh
 
         setButtons(voteUp, voteDown);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+
+    public void onEvent(final EventPostCommentResult eventPostCommentResult) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(eventPostCommentResult.isSuccess) {
+                    Toast.makeText(MainSearchActivity.this, eventPostCommentResult.message, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(MainSearchActivity.this, "Nieudane dodanie komentarza.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
     private void setButtons(LinearLayout voteUp, LinearLayout voteDown) {

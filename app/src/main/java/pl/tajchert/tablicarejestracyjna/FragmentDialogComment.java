@@ -154,10 +154,10 @@ public class FragmentDialogComment extends DialogFragment {
         @Override
         protected String doInBackground(String... params) {
             plateId = plateId.replace(" ", "");
-            if(image.contains("file:")){
+            if(image != null && image.contains("file:")){
                 image=image.replace("file:", "");
             }
-            APIConnect.addComment(author, plateId, content, image);
+            APIConnect.addComment(author, plateId, content, image, getActivity());
             return "Executed";
         }
 

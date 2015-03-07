@@ -1,5 +1,7 @@
 package pl.tajchert.tablicarejestracyjna.api;
 
+import android.content.Context;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -12,13 +14,14 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.File;
 import java.io.IOException;
 
+import de.greenrobot.event.EventBus;
 import pl.tajchert.tablicarejestracyjna.APIConstants;
 
 /**
  * Created by michaltajchert on 29/12/14.
  */
 public class APIConnect {
-    public static void addComment(String author, String plateId, String content, String photoPath) {
+    public static void addComment(String author, String plateId, String content, String photoPath, Context context) {
         //TODO UPDATE IT TO LATEST HTTPMIME FIXME
         HttpClient httpClient = new DefaultHttpClient();
         try {
@@ -35,8 +38,14 @@ public class APIConnect {
             httppost.setEntity(entity);
 
             HttpResponse response = httpClient.execute(httppost);
+            if(response.getStatusLine().getStatusCode() == 200){
+                EventBus.getDefault().post(new EventPostCommentResult(true, "Poprawnie dodano komentarz o " + plateId));
+            } else {
+                EventBus.getDefault().post(new EventPostCommentResult(false, ""));
+            }
         } catch (IOException e) {
             // TODO Auto-generated catch block
+            EventBus.getDefault().post(new EventPostCommentResult(false, ""));
         } finally {
             httpClient.getConnectionManager().shutdown();
         }
