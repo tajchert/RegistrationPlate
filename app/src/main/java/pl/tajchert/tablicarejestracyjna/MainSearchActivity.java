@@ -29,6 +29,7 @@ import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.AddFloatingActionButton;
 import com.google.gson.Gson;
 
+import io.fabric.sdk.android.Fabric;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -65,7 +66,7 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Crashlytics.start(this);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main_search);
         queue = Volley.newRequestQueue(this);
 
