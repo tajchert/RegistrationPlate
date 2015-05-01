@@ -19,6 +19,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -39,6 +41,7 @@ public class FragmentDialogComment extends DialogFragment {
     private ImageView sendButton;
     private Button imageButton;
     private ImageView imageSelected;
+    private CircleProgressBar circleProgressBar;
 
 
     static FragmentDialogComment newInstance(String plateId) {
@@ -80,6 +83,8 @@ public class FragmentDialogComment extends DialogFragment {
         sendButton = (ImageView) v.findViewById(R.id.buttonSend);
         imageButton = (Button) v.findViewById(R.id.buttonImage);
         imageSelected = (ImageView) v.findViewById(R.id.imageSelected);
+        circleProgressBar = (CircleProgressBar) v.findViewById(R.id.progressBar);
+        circleProgressBar.setColorSchemeColors(getResources().getColor(R.color.theme_color), getResources().getColor(R.color.theme_color_accent), getResources().getColor(R.color.theme_color_dark));
 
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,7 +97,6 @@ public class FragmentDialogComment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 //SEND
-
                 String plate;
                 if (plateId != null && plateId.length() > 0) {
                     plate = plateId;
@@ -109,6 +113,8 @@ public class FragmentDialogComment extends DialogFragment {
                     Toast.makeText(getActivity().getApplicationContext(), "Dodaj komentarz.", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                circleProgressBar.setVisibility(View.VISIBLE);
+                sendButton.setVisibility(View.GONE);
                 UploadComment uploader = new UploadComment(editTextNick.getText().toString(), editTextComment.getText().toString(), plate, lastPicLocation);
                 uploader.execute();
             }

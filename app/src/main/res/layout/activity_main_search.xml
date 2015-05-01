@@ -91,11 +91,6 @@
                 android:layout_gravity="right"
                 android:orientation="horizontal">
 
-                <com.balysv.materialripple.MaterialRippleLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:rippleColor="@color/theme_color_accent"
-                    app:rippleOverlay="false">
 
                     <LinearLayout
                         android:id="@+id/voteUp"
@@ -120,13 +115,6 @@
                             android:background="@android:color/transparent"
                             android:src="@drawable/ic_action_collapse" />
                     </LinearLayout>
-                </com.balysv.materialripple.MaterialRippleLayout>
-
-                <com.balysv.materialripple.MaterialRippleLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:rippleColor="@color/theme_color_accent"
-                    app:rippleOverlay="false">
 
                     <LinearLayout
                         android:id="@+id/voteDown"
@@ -152,7 +140,6 @@
                             android:background="@android:color/transparent"
                             android:src="@drawable/ic_action_expand" />
                     </LinearLayout>
-                </com.balysv.materialripple.MaterialRippleLayout>
             </LinearLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>

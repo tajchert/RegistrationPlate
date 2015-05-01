@@ -16,6 +16,7 @@
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:orientation="vertical">
 
+
             <EditText
                 android:id="@+id/EditTextPlateId"
                 android:layout_width="match_parent"
@@ -44,33 +45,28 @@
                 android:layout_gravity="center"
                 android:visibility="gone" />
 
-            <com.balysv.materialripple.MaterialRippleLayout
+            <Button
+                android:id="@+id/buttonImage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:rippleColor="@color/theme_color_accent"
-                app:rippleOverlay="false">
+                android:scaleType="fitEnd"
+                android:text="Dodaj zdjęcie" />
 
-                <Button
-                    android:id="@+id/buttonImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scaleType="fitEnd"
-                    android:text="Dodaj zdjęcie" />
-            </com.balysv.materialripple.MaterialRippleLayout>
+            <com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar
+                android:id="@+id/progressBar"
+                android:layout_gravity="right"
+                android:layout_marginRight="3dp"
+                android:visibility="gone"
+                app:mlpb_enable_circle_background="false"
+                android:layout_width="45dp"
+                android:layout_height="45dp"/>
 
-            <com.balysv.materialripple.MaterialRippleLayout
+            <ImageView
+                android:id="@+id/buttonSend"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:rippleColor="@color/theme_color_accent"
-                app:rippleOverlay="false">
-
-                <ImageView
-                    android:id="@+id/buttonSend"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:scaleType="fitEnd"
-                    android:src="@drawable/ic_action_send_now" />
-            </com.balysv.materialripple.MaterialRippleLayout>
+                android:layout_height="45dp"
+                android:scaleType="fitEnd"
+                android:src="@drawable/ic_action_send_now" />
         </LinearLayout>
     </ScrollView>
 

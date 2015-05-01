@@ -211,7 +211,8 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
     private void vote(String plateNumber, final int value) {
         // 1 - upvote, (-1) - downvote
         swipeLayout.setRefreshing(true);
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, APIConstants.TABLICE_INFO_PLATE + plateNumber + APIConstants.TABLICE_INFO_VOTE_ADD  + value, null, new Response.Listener<JSONObject>() {
+        String voteUrl = APIConstants.TABLICE_INFO_PLATE + plateNumber + APIConstants.TABLICE_INFO_VOTE_ADD  + value;
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, voteUrl, null, new Response.Listener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
@@ -224,8 +225,8 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
                         TextView voteUpText = (TextView) findViewById(R.id.voteUpText);
                         voteUpText.setText((currentTablica.getLapkiGora() + 1) + "");
                     } else if(value == (-1)) {
-                        TextView voteUpText = (TextView) findViewById(R.id.voteUpText);
-                        voteUpText.setText((currentTablica.getLapkiGora() - 1) + "");
+                        TextView voteDownText = (TextView) findViewById(R.id.voteDownText);
+                        voteDownText.setText((currentTablica.getLapkiDol() + 1) + "");
                     }
                 } else {
                     //NOT OK
