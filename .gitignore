@@ -8,3 +8,4 @@ APIConstants.java
 crashlytics.properties
 manifest-merger-release-report.txt
 app-release.apk
+app/fabric.properties
