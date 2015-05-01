@@ -169,7 +169,11 @@ public class FragmentDialogComment extends DialogFragment {
 
         @Override
         protected void onPostExecute(String result) {
-            getDialog().dismiss();
+            try {
+                getDialog().dismiss();
+            } catch (Exception e) {
+                //Dialog already dismissed
+            }
         }
 
         @Override
