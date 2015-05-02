@@ -3,7 +3,7 @@
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="5dp"
+    android:layout_margin="3dp"
     card_view:cardCornerRadius="1dp"
     card_view:cardElevation="2dp">
 
@@ -41,6 +41,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="10dp"
+            android:id="@+id/mainLayout"
             android:layout_toRightOf="@+id/commentVotes"
             android:orientation="vertical">
 
@@ -61,6 +62,19 @@
                 android:text="CONTENT"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
+            <ImageView
+                android:id="@+id/imageComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:text="Obejrzyj film"
+                android:id="@+id/buttonYoutube"/>
+
             <TextView
                 android:id="@+id/commentAuthor"
                 android:layout_width="wrap_content"
@@ -71,5 +85,13 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textStyle="italic" />
         </LinearLayout>
+
+        <pl.tajchert.tablicarejestracyjna.SubCommentsListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/mainLayout"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:id="@+id/subcomments"/>
     </RelativeLayout>
 </android.support.v7.widget.CardView>

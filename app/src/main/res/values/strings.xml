@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Tablica Rejestracyjna</string>
-    <string name="card_hint_start">Użyj wyszukiwania powyżej aby zobaczyć opinie o danym pojeździe.\n\nAby dodaj komentarz użyj guzika na dole strony.</string>
+    <string name="card_hint_start">Użyj wyszukiwania powyżej aby zobaczyć opinie o danym pojeździe.\n\nAby dodać komentarz użyj guzika na dole strony.</string>
     <string name="card_info_no_result">Nie znaleziono pasujących rezultatów.\n\nStwórz nowy komentarz aby dodać tablicę rejestracyjną do bazy.</string>
     <string name="card_info_author">Znalazłeś autora aplikacji :)</string>
     <string name="vote_success">Głos został oddany</string>

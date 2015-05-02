@@ -29,7 +29,6 @@ import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.AddFloatingActionButton;
 import com.google.gson.Gson;
 
-import io.fabric.sdk.android.Fabric;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -39,6 +38,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
+import io.fabric.sdk.android.Fabric;
 import pl.tajchert.tablicarejestracyjna.api.EventPostCommentResult;
 import pl.tajchert.tablicarejestracyjna.api.Komentarze;
 import pl.tajchert.tablicarejestracyjna.api.Tablica;
@@ -83,7 +83,7 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         commentsRecList.setLayoutManager(llm);
-        adapter = new AdapterComment(new ArrayList<Komentarze>());
+        adapter = new AdapterComment(new ArrayList<Komentarze>(), MainSearchActivity.this);
         commentsRecList.setAdapter(adapter);
 
         swipeLayout.setEnabled(false);
