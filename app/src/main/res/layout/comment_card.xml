@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="5dp"
-                android:text="Obejrzyj film"
+                android:text="@string/youtube_button"
                 android:id="@+id/buttonYoutube"/>
 
             <TextView

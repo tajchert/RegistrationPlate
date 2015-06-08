@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/app/src/main/java/pl/tajchert/tablicarejestracyjna/api/ApiTopRegistrationPlates.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/pl/tajchert/tablicarejestracyjna/api/ITopRegistrationPlates.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/pl/tajchert/tablicarejestracyjna/api/TopCardListAdapter.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/card_top.xml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/row_top_plate.xml" charset="UTF-8" />
+  </component>
+</project>

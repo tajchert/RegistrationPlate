@@ -16,6 +16,8 @@ import java.io.IOException;
 
 import de.greenrobot.event.EventBus;
 import pl.tajchert.tablicarejestracyjna.APIConstants;
+import retrofit.Callback;
+import retrofit.RestAdapter;
 
 /**
  * Created by michaltajchert on 29/12/14.
@@ -49,5 +51,13 @@ public class APIConnect {
         } finally {
             httpClient.getConnectionManager().shutdown();
         }
+    }
+
+    public static void getTopDrivers(Callback<ApiTopRegistrationPlates> topDriversCallback){
+        final RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(APIConstants.API_URL_IMPORTIO)
+                .build();
+        ITopRegistrationPlates topRegistrationPlates = restAdapter.create(ITopRegistrationPlates.class);
+        topRegistrationPlates.getTopDrivers(APIConstants.IMPORTIO_API_USER_KEY, APIConstants.IMPORTIO_API_KEY, topDriversCallback);
     }
 }

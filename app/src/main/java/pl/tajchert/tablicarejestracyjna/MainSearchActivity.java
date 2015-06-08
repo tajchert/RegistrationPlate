@@ -7,13 +7,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.AddFloatingActionButton;
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -39,12 +41,17 @@ import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
+import pl.tajchert.tablicarejestracyjna.api.APIConnect;
+import pl.tajchert.tablicarejestracyjna.api.ApiTopRegistrationPlates;
 import pl.tajchert.tablicarejestracyjna.api.EventPostCommentResult;
 import pl.tajchert.tablicarejestracyjna.api.Komentarze;
 import pl.tajchert.tablicarejestracyjna.api.Tablica;
+import pl.tajchert.tablicarejestracyjna.api.TopCardListAdapter;
+import retrofit.Callback;
+import retrofit.RetrofitError;
 
 
-public class MainSearchActivity extends ActionBarActivity implements SearchView.OnQueryTextListener {
+public class MainSearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     private static final String TAG = "MainSearchActivity";
     private AddFloatingActionButton fab;
     private RequestQueue queue;
@@ -53,7 +60,8 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
     private LinearLayout buttonsVotingLayout;
 
     private RecyclerView commentsRecList;
-    private RecyclerView.Adapter adapter;
+    private RecyclerView.Adapter adapterCommentsResults;
+    private RecyclerView.Adapter adapterTopPlates;
     private SearchView searchView;
     private CardView cardViewHint;
     private CardView cardViewPlate;
@@ -83,20 +91,69 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         commentsRecList.setLayoutManager(llm);
-        adapter = new AdapterComment(new ArrayList<Komentarze>(), MainSearchActivity.this);
-        commentsRecList.setAdapter(adapter);
+        adapterCommentsResults = new AdapterComment(new ArrayList<Komentarze>(), MainSearchActivity.this);
+        commentsRecList.setAdapter(adapterCommentsResults);
 
         swipeLayout.setEnabled(false);
         swipeLayout.setColorSchemeColors(getResources().getColor(R.color.theme_color_accent), getResources().getColor(R.color.theme_color), getResources().getColor(R.color.theme_color_dark));
         swipeLayout.setDistanceToTriggerSync(Integer.MAX_VALUE);//Do not allow user to pull to refresh
 
         setButtons(voteUp, voteDown);
+        RegistrationPlateApplication.tracker.setScreenName("EntryScreen");
+        RegistrationPlateApplication.tracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         EventBus.getDefault().register(this);
+        //Check if search is empty and there is no visible cards
+        if(cardViewHint != null && cardViewHint.getVisibility() == View.VISIBLE) {
+            getTopPlates();
+        }
+    }
+
+    private void getTopPlates() {
+        if(adapterTopPlates != null) {
+            commentsRecList.setAdapter(adapterTopPlates);
+            commentsRecList.setVisibility(View.VISIBLE);
+            cardViewHint.setVisibility(View.GONE);
+            cardViewPlate.setVisibility(View.GONE);
+        } else {
+            APIConnect.getTopDrivers(new Callback<ApiTopRegistrationPlates>() {
+                @Override
+                public void success(ApiTopRegistrationPlates apiTopRegistrationPlates, retrofit.client.Response response) {
+                    //Show card with top registration plates
+                    adapterTopPlates = new TopCardListAdapter((ArrayList<ApiTopRegistrationPlates.Result>) apiTopRegistrationPlates.results, MainSearchActivity.this, new Callback<String>() {
+                        @Override
+                        public void success(String s, retrofit.client.Response response) {
+                            //click
+
+                            RegistrationPlateApplication.tracker.setScreenName("SearchFromTop");
+                            RegistrationPlateApplication.tracker.send(new HitBuilders.ScreenViewBuilder().build());
+                            s = s.replace(" ", "");
+                            search(s + "");
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+
+                        }
+                    });
+                    if (apiTopRegistrationPlates.results != null && apiTopRegistrationPlates.results.size() >= 20) {
+                        commentsRecList.setAdapter(adapterTopPlates);
+                        commentsRecList.setVisibility(View.VISIBLE);
+                        cardViewHint.setVisibility(View.GONE);
+                        cardViewPlate.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Toast.makeText(MainSearchActivity.this, "Nieudane pobranie top tablic", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 
     @Override
@@ -157,6 +214,9 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
             if(searchPlate.equals("WX37125")){
                 setCustomCard();
             } else {
+
+                RegistrationPlateApplication.tracker.setScreenName("SearchFromSubmitButton");
+                RegistrationPlateApplication.tracker.send(new HitBuilders.ScreenViewBuilder().build());
                 search(searchPlate);
             }
             Log.d(TAG, "onQueryTextSubmit history: " + SearchStorage.getInstance(MainSearchActivity.this).getHistory());
@@ -177,6 +237,16 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
 
     private void search(final String plateNumber) {
         swipeLayout.setRefreshing(true);
+        RegistrationPlateApplication.tracker.send(new HitBuilders.EventBuilder()
+                .setCategory("ui_event")
+                .setAction("search")
+                .setLabel(plateNumber)
+                .build());
+        try {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        } catch (Exception e) {
+            Log.d(TAG, "search when displaying home button: " + e.getLocalizedMessage());
+        }
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, APIConstants.TABLICE_INFO_PLATE + plateNumber, null, new Response.Listener<JSONObject>() {
 
             @Override
@@ -211,6 +281,12 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
 
     private void vote(String plateNumber, final int value) {
         // 1 - upvote, (-1) - downvote
+        RegistrationPlateApplication.tracker.send(new HitBuilders.EventBuilder()
+                .setCategory("ui_event")
+                .setAction("vote")
+                .setLabel(plateNumber)
+                .setValue(value)
+                .build());
         swipeLayout.setRefreshing(true);
         String voteUrl = APIConstants.TABLICE_INFO_PLATE + plateNumber + APIConstants.TABLICE_INFO_VOTE_ADD  + value;
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, voteUrl, null, new Response.Listener<JSONObject>() {
@@ -275,8 +351,9 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
         }
         votedForThatPlate = false;
 
-        ((AdapterComment) adapter).setCommentList(tablica.getKomentarze());
-        adapter.notifyDataSetChanged();
+        commentsRecList.setAdapter(adapterCommentsResults);
+        ((AdapterComment) adapterCommentsResults).setCommentList(tablica.getKomentarze());
+        adapterCommentsResults.notifyDataSetChanged();
     }
 
     /**
@@ -343,10 +420,32 @@ public class MainSearchActivity extends ActionBarActivity implements SearchView.
                 String selectedSearch = SearchStorage.getMatchedSearches(MainSearchActivity.this, lastSearchSuggestion).get(i);
                 searchView.setQuery(selectedSearch, false);
                 search(selectedSearch);
+                RegistrationPlateApplication.tracker.setScreenName("SearchSuggestion");
+                RegistrationPlateApplication.tracker.send(new HitBuilders.ScreenViewBuilder().build());
                 return true;
             }
         });
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                getTopPlates();
+                try {
+                    RegistrationPlateApplication.tracker.send(new HitBuilders.EventBuilder()
+                            .setCategory("ui_event")
+                            .setAction("home_press")
+                            .build());
+                    getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                } catch (Exception e) {
+                    Log.d(TAG, "onOptionsItemSelected exception: " + e.getLocalizedMessage());
+                }
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
