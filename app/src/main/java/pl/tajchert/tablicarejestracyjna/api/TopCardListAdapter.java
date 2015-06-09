@@ -23,6 +23,8 @@ import retrofit.Callback;
 public class TopCardListAdapter extends RecyclerView.Adapter<TopCardListAdapter.TopPlatesViewHolder> {
     private static final String TAG = "TopCardListAdapter";
     private ArrayList<ApiTopRegistrationPlates.Result> topPlates;
+    private ArrayList<ApiTopRegistrationPlates.Result> worstDrivers;
+    private ArrayList<ApiTopRegistrationPlates.Result> bestDrivers;
     private Context context;
     private Callback<String> callback;
 
@@ -33,6 +35,8 @@ public class TopCardListAdapter extends RecyclerView.Adapter<TopCardListAdapter.
         this.context = context;
         this.topPlates = topPlates;
         this.callback = callback;
+        this.bestDrivers = new ArrayList<>(topPlates.subList(10,20));
+        this.worstDrivers = new ArrayList<>(topPlates.subList(0,10));
 
     }
 
@@ -44,23 +48,23 @@ public class TopCardListAdapter extends RecyclerView.Adapter<TopCardListAdapter.
     }
 
     @Override
-    public void onBindViewHolder(TopPlatesViewHolder userStatsCard, int i) {
+    public void onBindViewHolder(TopPlatesViewHolder userStatsCard, final int cardNumber) {
         WtBestPlayersAdapter bestAdapter;
-        if(i == 0) {
-            bestAdapter = new WtBestPlayersAdapter(context, R.layout.row_top_plate, new ArrayList<>(topPlates.subList(0,10)), false);
+        if(cardNumber == 0) {
+            bestAdapter = new WtBestPlayersAdapter(context, R.layout.row_top_plate, worstDrivers, false);
             cardTitle.setText("Najgorsi kierowcy");
         } else {
-            bestAdapter = new WtBestPlayersAdapter(context, R.layout.row_top_plate, new ArrayList<>(topPlates.subList(10,20)), true);
+            bestAdapter = new WtBestPlayersAdapter(context, R.layout.row_top_plate, bestDrivers, true);
             cardTitle.setText("Najlepsi kierowcy");
         }
         userStatsCard.listView.setAdapter(bestAdapter);
         userStatsCard.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if(i == 0) {
-                    callback.success(new ArrayList<>(topPlates.subList(0,10)).get(i).worstDriver, null);
+                if(cardNumber == 0) {
+                    callback.success(worstDrivers.get(i).worstDriver, null);
                 } else {
-                    callback.success(new ArrayList<>(topPlates.subList(10,20)).get(i).bestDriver, null);
+                    callback.success(bestDrivers.get(i).bestDriver, null);
                 }
             }
         });
