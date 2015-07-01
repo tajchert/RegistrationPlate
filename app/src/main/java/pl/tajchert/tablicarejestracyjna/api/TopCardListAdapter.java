@@ -35,8 +35,10 @@ public class TopCardListAdapter extends RecyclerView.Adapter<TopCardListAdapter.
         this.context = context;
         this.topPlates = topPlates;
         this.callback = callback;
-        this.bestDrivers = new ArrayList<>(topPlates.subList(10,20));
-        this.worstDrivers = new ArrayList<>(topPlates.subList(0,10));
+        if(topPlates.size() >= 20) {
+            this.bestDrivers = new ArrayList<>(topPlates.subList(10, 20));
+            this.worstDrivers = new ArrayList<>(topPlates.subList(0, 10));
+        }
 
     }
 

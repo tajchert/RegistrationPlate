@@ -18,8 +18,8 @@ android {
         applicationId "pl.tajchert.tablicarejestracyjna"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 8
-        versionName "1.7"
+        versionCode 9
+        versionName "1.8"
     }
     buildTypes {
         release {
@@ -58,7 +58,7 @@ dependencies {
     compile('com.lsjwzh:materialloadingprogressbar:0.5.4-RELEASE')
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.google.android.gms:play-services-analytics:7.5.0'
-    compile('com.crashlytics.sdk.android:crashlytics:2.2.4@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.4.0@aar') {
         transitive = true;
     }
 }
