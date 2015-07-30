@@ -22,7 +22,6 @@ public class RegistrationPlateApplication extends Application {
         tracker.enableExceptionReporting(true);
         tracker.enableAdvertisingIdCollection(true);
         tracker.enableAutoActivityTracking(true);
-        tracker.enableAdvertisingIdCollection(true);
 
     }
 }
