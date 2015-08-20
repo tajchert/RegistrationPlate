@@ -39,7 +39,12 @@ public class TopCardListAdapter extends RecyclerView.Adapter<TopCardListAdapter.
             this.bestDrivers = new ArrayList<>(topPlates.subList(10, 20));
             this.worstDrivers = new ArrayList<>(topPlates.subList(0, 10));
         }
-
+        if(this.bestDrivers == null) {
+            this.bestDrivers = new ArrayList<>();
+        }
+        if(this.worstDrivers == null) {
+            this.worstDrivers = new ArrayList<>();
+        }
     }
 
     @Override
